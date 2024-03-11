@@ -1,0 +1,120 @@
+#include <iostream>
+#include "TaskList.h"
+
+int main() {
+    TaskList taskList;
+
+    // Main menu
+    int choice;
+    do {
+        std::cout << "\nTask List Application\n";
+        std::cout << "1. Add Task\n";
+        std::cout << "2. Mark Task as Completed\n";
+        std::cout << "3. View Task List\n";
+        std::cout << "4. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                taskList.addTask();
+                break;
+            case 2:
+                taskList.markTaskCompleted();
+                break;
+            case 3:
+                taskList.viewTaskList();
+                break;
+            case 4:
+                std::cout << "Exiting program...\n";
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 4);
+
+    return 0;
+}#ifndef TASK_H
+#define TASK_H
+
+#include <string>
+
+class Task {
+private:
+    std::string description;
+    bool completed;
+
+public:
+    Task(const std::string& desc);
+
+    void markCompleted();
+    bool isCompleted() const;
+    std::string getDescription() const;
+};
+
+#endif // TASK_H#include "Task.h"
+
+Task::Task(const std::string& desc) : description(desc), completed(false) {}
+
+void Task::markCompleted() {
+    completed = true;
+}
+
+bool Task::isCompleted() const {
+    return completed;
+}
+
+std::string Task::getDescription() const {
+    return description;
+}#ifndef TASKLIST_H
+#define TASKLIST_H
+
+#include <vector>
+#include "Task.h"
+
+class TaskList {
+private:
+    std::vector<Task> tasks;
+
+public:
+    void addTask();
+    void markTaskCompleted();
+    void viewTaskList() const;
+};
+
+#endif // TASKLIST_H#include <iostream>
+#include "TaskList.h"
+
+void TaskList::addTask() {
+    std::string description;
+    std::cout << "Enter task description: ";
+    std::cin.ignore();
+    std::getline(std::cin, description);
+    tasks.push_back(Task(description));
+}
+
+void TaskList::markTaskCompleted() {
+    int index;
+    std::cout << "Enter the index of the task to mark as completed: ";
+    std::cin >> index;
+    if (index >= 0 && index < tasks.size()) {
+        tasks[index].markCompleted();
+        std::cout << "Task marked as completed.\n";
+    } else {
+        std::cout << "Invalid task index.\n";
+    }
+}
+
+void TaskList::viewTaskList() const {
+    std::cout << "\nTask List:\n";
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        std::cout << i << ". ";
+        if (tasks[i].isCompleted()) {
+            std::cout << "[X] ";
+        } else {
+            std::cout << "[ ] ";
+        }
+        std::cout << tasks[i].getDescription() << std::endl;
+    }
+
+}
